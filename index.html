@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Duelo de Casais</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/heroicons/2.1.1/24/outline/heroicons.min.css" rel="stylesheet">
+  <script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@^19.1.0",
+    "react-dom/": "https://esm.sh/react-dom@^19.1.0/",
+    "react/": "https://esm.sh/react@^19.1.0/",
+    "recharts": "https://esm.sh/recharts@^2.15.3",
+    "@google/genai": "https://esm.sh/@google/genai@^1.13.0"
+  }
+}
+</script>
+<style>
+  body {
+    font-family: 'Poppins', sans-serif;
+    color: #F1F5F9; /* Light slate color for base text, good with purples/pinks */
+    background: linear-gradient(270deg, #4f46e5, #ec4899, #a855f7, #7c3aed); /* Indigo, Pink, Purple, Violet */
+    background-size: 600% 600%; /* Larger size for smoother, slower transition */
+    animation: gradientAnimation 18s ease infinite; /* Slightly faster overall cycle, but smoother due to size */
+  }
+
+  @keyframes gradientAnimation {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .animate-fadeIn {
+    animation: fadeIn 0.5s ease-out forwards;
+  }
+  @keyframes pulseSlow {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.03); opacity: 0.85; } /* Slightly more pronounced */
+  }
+  .animate-pulseSlow {
+    animation: pulseSlow 2.5s infinite ease-in-out;
+  }
+  @keyframes pulseShadow {
+    0%, 100% { box-shadow: 0 0 20px rgba(233, 72, 153, 0.3); } /* Softer pink shadow */
+    50% { box-shadow: 0 0 30px rgba(233, 72, 153, 0.5); }
+  }
+  .animate-pulseShadow {
+    animation: pulseShadow 3s infinite ease-in-out;
+  }
+  /* Custom scrollbar for webkit browsers */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: rgba(0,0,0,0.1);
+    border-radius: 10px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(233, 30, 99, 0.5); /* Pink color, semi-transparent */
+    border-radius: 10px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(233, 30, 99, 0.8); /* Darker pink on hover */
+  }
+  .minigame-selection-area {
+    transition: max-height 0.5s ease-in-out, opacity 0.5s ease-in-out, padding 0.5s ease-in-out, margin 0.5s ease-in-out;
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    margin-top: 0;
+  }
+  .minigame-selection-area.expanded {
+    max-height: 800px; /* Increased to fit card layout better, accommodates 5 cards + error */
+    opacity: 1;
+    padding-top: 1rem; /* Corresponds to p-4 */
+    padding-bottom: 1rem;
+    margin-top: 0.75rem; /* Corresponds to mb-3 if button has mb-3, or add generic mt */
+  }
+
+  @keyframes crashTextPop {
+    0% { transform: scale(0.5) translateY(20px); opacity: 0; }
+    60% { transform: scale(1.2) translateY(-5px); opacity: 1; }
+    80% { transform: scale(1.1) translateY(0px) translateX(-2px); }
+    90% { transform: scale(1.1) translateY(0px) translateX(2px); }
+    100% { transform: scale(1.1) translateY(0px) translateX(0px); opacity: 1; }
+  }
+  .animate-crashTextPop {
+    animation: crashTextPop 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55) forwards;
+  }
+
+  @keyframes countdownPulse {
+    0%, 100% { transform: scale(1); opacity: 0.8; }
+    50% { transform: scale(1.15); opacity: 1; }
+  }
+  .animate-countdownPulse {
+    /* Apply this directly or use a 1s duration and control via JS */
+    animation: countdownPulse 0.8s ease-in-out forwards;
+  }
+
+  @keyframes fadeInUpShort {
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .animate-fadeInUpShort {
+    animation: fadeInUpShort 0.5s ease-out forwards;
+  }
+
+  @keyframes buttonPop {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.08); }
+  }
+  .animate-buttonPop {
+    animation: buttonPop 0.3s ease-out;
+  }
+
+  @keyframes waitingPulse { /* Original for "Aguardando Crash" base text */
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.65; transform: scale(1.03); }
+  }
+  .animate-waitingPulse {
+    animation: waitingPulse 2.2s infinite ease-in-out;
+  }
+
+  /* Animated Ellipsis for "Aguardando o Crash..." */
+  .ellipsis-container .dot {
+    opacity: 0;
+    animation: ellipsis-fade 1.5s infinite;
+  }
+  .ellipsis-container .dot:nth-child(1) { animation-delay: 0s; }
+  .ellipsis-container .dot:nth-child(2) { animation-delay: 0.25s; }
+  .ellipsis-container .dot:nth-child(3) { animation-delay: 0.5s; }
+
+  @keyframes ellipsis-fade {
+    0% { opacity: 0; }
+    50% { opacity: 1; }
+    100% { opacity: 0; }
+  }
+
+  @keyframes scoreUpdateAnim {
+    0% { transform: scale(1); color: #F1F5F9; } /* Default text color (slate-100) */
+    50% { transform: scale(1.15); color: #FDE047; } /* Yellow-300 */
+    100% { transform: scale(1); color: #F1F5F9; }
+  }
+  .animate-scoreUpdate {
+    animation: scoreUpdateAnim 0.5s ease-out;
+  }
+
+  @keyframes viewEnterAnimation {
+    from { opacity: 0; transform: scale(0.97) translateY(15px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+  }
+  .animate-viewEnter {
+    animation: viewEnterAnimation 0.45s ease-out forwards;
+  }
+
+  @keyframes activePlayerGlow {
+    0%, 100% { box-shadow: 0 0 6px rgba(250, 204, 21, 0), 0 0 8px rgba(250, 204, 21, 0); } /* yellow-300, transparent */
+    50% { box-shadow: 0 0 15px rgba(250, 204, 21, 0.75), 0 0 22px rgba(250, 204, 21, 0.55); } /* yellow-300, more visible */
+  }
+  .animate-activePlayerGlow {
+    animation: activePlayerGlow 1.8s infinite ease-in-out;
+  }
+  
+  /* Pulse animation for the active player's key label */
+  @keyframes activeKeyLabelPulse {
+    0%, 100% {
+      transform: scale(1);
+      box-shadow: 0 1px 2px rgba(0,0,0,0.1); /* Default shadow for the label */
+      filter: brightness(1);
+    }
+    50% {
+      transform: scale(1.03); /* Slightly larger */
+      box-shadow: 0 2px 6px rgba(250, 204, 21, 0.35), 0 0 12px rgba(250, 204, 21, 0.25); /* Yellowish glow */
+      filter: brightness(1.2); /* Slightly brighter */
+    }
+  }
+  .animate-activeKeyLabelPulse {
+    animation: activeKeyLabelPulse 1.5s infinite ease-in-out;
+  }
+
+
+  @keyframes iconPopIn {
+    0% { transform: scale(0.3) translateY(10px); opacity: 0; }
+    60% { transform: scale(1.1); opacity: 1; }
+    100% { transform: scale(1) translateY(0); opacity: 1; }
+  }
+  .animate-iconPopIn {
+    animation: iconPopIn 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55) forwards;
+  }
+
+  @keyframes slideDownAndFadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-100%);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  .animate-slideDownAndFadeIn {
+    animation: slideDownAndFadeIn 0.3s ease-out forwards;
+  }
+
+  @keyframes slideUpAndFadeOut {
+    from {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    to {
+      opacity: 0;
+      transform: translateY(-100%);
+    }
+  }
+  .animate-slideUpAndFadeOut {
+    animation: slideUpAndFadeOut 0.3s ease-in forwards;
+  }
+
+  /* Modal Animations */
+  @keyframes modalBackdropFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  .animate-modalBackdropFadeIn {
+    animation: modalBackdropFadeIn 0.3s ease-out forwards;
+  }
+  @keyframes modalPanelAnimation { /* Renamed from modalPanelScaleUp for broader use if needed */
+    from { opacity: 0; transform: scale(0.95) translateY(10px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+  }
+  .animate-modalPanelEnter {
+    animation: modalPanelAnimation 0.3s ease-out forwards;
+  }
+
+  /* Cash-out Flair Animation */
+  @keyframes cashOutFlairAnimation {
+    0%, 100% { box-shadow: 0 0 0px rgba(74, 222, 128, 0); outline: 2px solid transparent; } /* green-400 */
+    50% { box-shadow: 0 0 20px rgba(74, 222, 128, 0.9); outline: 2px solid rgba(74, 222, 128, 0.7); }
+  }
+  .animate-cashOutFlair {
+    animation: cashOutFlairAnimation 1.5s ease-in-out;
+  }
+
+  /* Cash-out Button Active Pulse */
+  @keyframes buttonActivePulse {
+    0%, 100% { 
+      transform: scale(1); 
+      box-shadow: 0 0 12px rgba(250, 204, 21, 0.4), inset 0 0 0px rgba(255,255,255,0.1);
+      filter: brightness(1);
+    }
+    50% { 
+      transform: scale(1.03); 
+      box-shadow: 0 0 22px rgba(250, 204, 21, 0.7), inset 0 0 10px rgba(255,255,255,0.2);
+      filter: brightness(1.1);
+    }
+  }
+  .animate-buttonActivePulse {
+    animation: buttonActivePulse 1.5s infinite ease-in-out;
+  }
+
+
+  /* Simple Confetti Animation */
+  @keyframes fall {
+    0% { transform: translateY(-20vh) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+  }
+  .confetti-piece {
+    position: absolute;
+    top: 0; /* Start above the screen */
+    width: 10px;
+    height: 10px;
+    opacity: 0;
+    animation-name: fall;
+    animation-timing-function: linear;
+    animation-iteration-count: 1; /* Play once per piece */
+    animation-fill-mode: forwards;
+  }
+
+  /* SVG icon styles for Mute Button */
+  .speaker-icon {
+    width: 1.5rem; /* w-6 */
+    height: 1.5rem; /* h-6 */
+    stroke-width: 1.5;
+  }
+
+  /* Minigame option selection pop */
+  @keyframes optionSelectPop {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.07); box-shadow: 0 0 15px rgba(233, 30, 99, 0.4); }
+    100% { transform: scale(1); }
+  }
+  .animate-optionSelectPop {
+    animation: optionSelectPop 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55); /* Ease-out-back like feel */
+  }
+
+  /* Fade in and gentle pulse for "Round Ready" message */
+  @keyframes fadeInPulseSlow {
+    0% { opacity: 0; transform: scale(0.95) translateY(5px); }
+    50% { opacity: 1; transform: scale(1.02) translateY(0); }
+    75% { opacity: 0.9; transform: scale(1.01) translateY(0); }
+    100% { opacity: 1; transform: scale(1) translateY(0); }
+  }
+  .animate-fadeInPulseSlow {
+    animation: fadeInPulseSlow 1.5s ease-out forwards, pulseSlow 2.5s 1.5s infinite ease-in-out; /* Chain pulseSlow after initial fade-in */
+  }
+
+  /* Minigame Loading Icons Animations */
+  @keyframes loading-magnify-pulse { /* For Verdade */
+    0%, 100% { transform: scale(1); opacity: 0.7; }
+    50% { transform: scale(1.15); opacity: 1; }
+  }
+  .animate-loading-magnify-pulse { animation: loading-magnify-pulse 1.5s infinite ease-in-out; }
+
+  @keyframes loading-hand-raise { /* For Eu Nunca */
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    25% { transform: translateY(-8px) rotate(-5deg); }
+    75% { transform: translateY(-4px) rotate(3deg); }
+  }
+  .animate-loading-hand-raise { animation: loading-hand-raise 1.8s infinite ease-in-out; }
+  
+  @keyframes loading-arrows-choice { /* For Faria ou Não Faria */
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-4px); }
+    75% { transform: translateX(4px); }
+  }
+  .animate-loading-arrows-choice { animation: loading-arrows-choice 1.2s infinite ease-in-out; }
+
+  @keyframes loading-thinking-bubble { /* For Quiz do Casal */
+    0% { transform: scale(1); }
+    10% { transform: scale(1.05) translateX(2px) translateY(-1px); }
+    20% { transform: scale(1) translateX(0px) translateY(0px); }
+    /* Dots animation can be inner SVGs or pseudo-elements */
+  }
+  .animate-loading-thinking-bubble { animation: loading-thinking-bubble 2.5s infinite ease-in-out; }
+  .thinking-dot { animation: thinking-dot-pulse 1.5s infinite ease-in-out; }
+  .thinking-dot:nth-child(1) { animation-delay: 0s; }
+  .thinking-dot:nth-child(2) { animation-delay: 0.2s; }
+  .thinking-dot:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes thinking-dot-pulse {
+    0%, 60%, 100% { transform: scale(0.8); opacity: 0.5; }
+    30% { transform: scale(1.1); opacity: 1; }
+  }
+
+  @keyframes loading-lightbulb-brighten { /* For Quem Sabe Mais */
+    0%, 100% { filter: brightness(0.8) drop-shadow(0 0 2px #facc15); opacity: 0.7; } /* yellow-400 */
+    50% { filter: brightness(1.3) drop-shadow(0 0 8px #fde047); opacity: 1; } /* yellow-300 */
+  }
+  .animate-loading-lightbulb-brighten { animation: loading-lightbulb-brighten 2s infinite ease-in-out; }
+
+  /* Minigame Error Icon Animation */
+  @keyframes icon-error-glitch {
+    0%, 100% { transform: translate(0, 0); }
+    10% { transform: translate(-2px, 1px) skewX(-5deg); }
+    20% { transform: translate(1px, -1px) skewX(3deg); }
+    30% { transform: translate(-1px, 2px) skewX(-2deg); }
+    40% { transform: translate(2px, -2px) skewX(4deg); }
+    50% { transform: translate(0,0); opacity: 1; }
+    55% { opacity: 0.6; }
+    60% { opacity: 1; }
+  }
+  .animate-icon-error-glitch { animation: icon-error-glitch 1.5s infinite steps(1, end); }
+
+  /* LineGraph Crash Impact Animation */
+  @keyframes graphCrashImpact {
+    0% {
+      box-shadow: 0 0 0px rgba(255, 0, 0, 0);
+      border-color: transparent; /* Start with transparent border */
+      transform: scale(1);
+    }
+    50% {
+      box-shadow: 0 0 25px rgba(255, 0, 0, 0.85), 0 0 40px rgba(255, 60, 60, 0.65);
+      border-color: rgba(255, 0, 0, 0.7); /* Flash red border */
+      transform: scale(1.015); /* Slight pop */
+    }
+    100% {
+      box-shadow: 0 0 0px rgba(255, 0, 0, 0);
+      border-color: transparent; /* Return to transparent border */
+      transform: scale(1);
+    }
+  }
+  .animate-graphCrashImpact {
+    animation: graphCrashImpact 0.5s ease-out forwards;
+  }
+
+  /* Error Toast Animations */
+  @keyframes toastEnterBottom {
+    from {
+      opacity: 0;
+      transform: translateY(100%);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  .animate-toastEnterBottom {
+    animation: toastEnterBottom 0.4s ease-out forwards;
+  }
+
+  @keyframes toastExitBottom {
+    from {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    to {
+      opacity: 0;
+      transform: translateY(100%);
+    }
+  }
+  .animate-toastExitBottom {
+    animation: toastExitBottom 0.4s ease-in forwards;
+  }
+
+  /* Roulette Wheel Styles */
+  .roulette-wheel-container {
+    position: relative;
+    width: 260px; /* Adjusted for canvas (240px) + padding/border */
+    height: 260px;
+    margin: 1rem auto; /* Centering */
+    border-radius: 50%;
+    background-color: #311b92; /* Deep purple background for the container */
+    padding: 10px; /* Padding around the canvas */
+    box-shadow: 0 0 15px rgba(0,0,0,0.6), inset 0 0 10px rgba(0,0,0,0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .roulette-canvas-wheel { /* Style for the canvas element */
+    display: block; /* Removes extra space below canvas */
+    border-radius: 50%; /* If canvas itself should be clipped (though drawing handles it) */
+    /* Updated transition to match ROULETTE_SPIN_DURATION_MS from constants.ts (5000ms = 5s) */
+    transition: transform 5s cubic-bezier(0.1, 0, 0.25, 1);
+  }
+  .roulette-pointer {
+    position: absolute;
+    top: -5px; /* Position relative to the container's edge */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-top: 15px solid #facc15; /* yellow-400, for pointer */
+    z-index: 10;
+    filter: drop-shadow(0px 1px 1px rgba(0,0,0,0.5));
+  }
+
+  /* Roulette Color Button Grid - Mobile First (Stacked) */
+  .color-selection-buttons-container {
+    display: flex;
+    flex-direction: column;
+    gap: 8px; /* Corresponds to Tailwind's gap-2 - for stacked view */
+    width: 100%;
+  }
+
+  /* Apply fluid font size to buttons within this specific container */
+  .color-selection-buttons-container > button {
+    font-size: clamp(0.75rem, 2.2vw, 1rem); /* Approx 12px min, responsive, 16px max */
+    /* line-height can also be made fluid if necessary, e.g., clamp(1.1, 2.5vw, 1.5) */
+  }
+
+  /* Roulette Color Button Grid - Wider Screens (Horizontal Grid) */
+  @media (min-width: 768px) { /* md breakpoint in Tailwind */
+    .color-selection-buttons-container {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr); /* Three equal-width columns */
+      gap: 0.5rem; /* Adjusted gap for better visual separation: 8px */
+    }
+  }
+
+</style>
+</head>
+  <body
+    class="min-h-screen flex items-center justify-center text-slate-100"
+  >
+    <div id="root" class="w-full max-w-2xl mx-auto p-4"></div>
+
+    <!-- Audio Elements -->
+    <audio id="audio-click" src="./assets/sounds/click.wav" preload="auto"></audio>
+    <audio id="audio-cashout" src="./assets/sounds/cashout.wav" preload="auto"></audio>
+    <audio id="audio-crash" src="./assets/sounds/crash.wav" preload="auto"></audio>
+    <audio id="audio-countdown-tick" src="./assets/sounds/tick.wav" preload="auto"></audio>
+    <audio id="audio-minigame_start" src="./assets/sounds/minigame_start.wav" preload="auto"></audio>
+    <audio id="audio-select" src="./assets/sounds/select.wav" preload="auto"></audio>
+    <audio id="audio-roulette_spin" src="./assets/sounds/roulette_spin.wav" preload="auto"></audio>
+    <audio id="audio-roulette_stop" src="./assets/sounds/roulette_stop.wav" preload="auto"></audio>
+    <!-- Add more audio elements as needed -->
+
+    <script type="module" src="/index.tsx"></script>
+    <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
+  </body>
+</html>

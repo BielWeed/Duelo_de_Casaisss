@@ -1,0 +1,236 @@
+
+import { Gender, MiniGameType, BetColor } from '../types';
+
+export const PT_BR = {
+  appName: "Duelo de Casais",
+  player1NameLabel: "Nome do Jogador 1",
+  player2NameLabel: "Nome do Jogador 2",
+  genderLabel: "Gênero",
+  masculino: "Masculino",
+  feminino: "Feminino",
+  outro: "Outro",
+  adultModeLabel: "Modo Adulto (+18)",
+  adultModeWarning: "Atenção: Ativar o Modo Adulto incluirá perguntas picantes e de teor adulto. Prossiga com responsabilidade.",
+  startGame: "Começar Jogo",
+  loading: "Carregando...",
+  crashPhaseTitle: "Fase Crash!",
+  cashOut: "Retirar!",
+  waitingForCrash: "Aguardando o Crash", 
+  multiplier: "Multiplicador",
+  score: "Pontos",
+  round: "Round", 
+  pressKeyToCashOut: (key: string) => `Pressione ${key} para retirar!`,
+  
+  playerCashedOut: (name: string, multiplier: number, winnings: number, bet: number) => `${name} retirou em ${multiplier.toFixed(2)}x e ganhou ${winnings.toFixed(0)} pontos (aposta: ${bet})!`,
+  playerCrashed: (name: string, betLost: number) => `${name} não retirou a tempo e perdeu a aposta de ${betLost} pontos!`,
+  
+  bothCashedOut: "Ambos retiraram!",
+  bothCrashed: "Ambos não retiraram a tempo! Rodada empatada.",
+  crashOccurredAt: (multiplier: number) => `Crash em ${multiplier.toFixed(2)}x!`,
+  roundWinnerIs: (name: string) => `${name} venceu a rodada!`,
+  roundDraw: "Rodada empatada!",
+  miniGameTitle: "Minijogo do Perdedor!",
+  loserIs: (name: string) => `É a vez de ${name}!`,
+  truthGameName: "Verdade",
+  neverHaveIEverGameName: "Eu Nunca",
+  wouldIDoItGameName: "Faria ou Não Faria?",
+  couplesQuizGameName: "Quiz do Casal",
+  generatingQuestion: "Gerando pergunta com IA...",
+  generatingTruthQuestion: "Revelando uma Verdade ou Mentira...",
+  generatingNeverHaveIEverQuestion: "Relembrando um 'Eu Nunca'...",
+  generatingWouldIDoItQuestion: "Criando um Dilema (Faria ou Não Faria?)...",
+  generatingCouplesQuizQuestion: "Elaborando um Quiz do Casal...",
+  questionFromAI: "Pergunta da IA:",
+  continue: "Continuar",
+  nextRound: "Próxima Rodada",
+  endGame: "Fim de Jogo!",
+  finalWinnerIs: (name: string) => `O grande vencedor é ${name}!`,
+  winnerPrize: (winnerName: string, loserName: string) => `${winnerName}, você ganhou o direito de fazer UMA pergunta que ${loserName} deve responder com total honestidade!`,
+  loserPenalty: (loserName: string) => `${loserName}, além de responder à pergunta, você deve beber um copo de uma bebida (alcoólica ou não, à escolha do casal)!`,
+  playAgain: "Jogar Novamente",
+  errorOccurred: "Ocorreu um erro",
+  errorFetchingQuestion: "Erro ao buscar pergunta da IA. Tente novamente.",
+  apiKeyMissing: "Chave de API do OpenRouter não configurada. Verifique as variáveis de ambiente.",
+  player1KeyLabel: "Seta Esquerda (←)",
+  player2KeyLabel: "Seta Direita (→)",
+  initialInstructions: "Preparem-se! Pressione sua tecla antes do Crash para multiplicar seus pontos. O perdedor da rodada enfrenta um minijogo!",
+  roundResults: "Resultados da Rodada",
+  finalScores: "Pontuações Finais",
+  victoriesLabel: "Vitórias", 
+  playerLabel: "Jogador",
+
+  iHaveDoneIt: "Eu já fiz",
+  iHaveNeverDoneIt: "Eu nunca fiz",
+  iWouldDoIt: "Eu faria",
+  iWouldNotDoIt: "Eu não faria",
+  itsTrue: "É verdade",
+  itsALie: "É mentira",
+  lovedIt: "Adorei!",
+  couldBeBetter: "Meh...",
+  catchUpMessage: (laggingPlayerName: string, multiplierNeeded: string, leadingPlayerName: string) => 
+    `${laggingPlayerName}, você precisa de um multiplicador de ${multiplierNeeded}x para alcançar ${leadingPlayerName}!`,
+  regenerateOptions: "Regenerar Opções",
+  regeneratingOptions: "Regerando Opções...",
+  selectMinigamesTitle: "Selecionar Minijogos Ativos",
+  errorNoMinigamesSelected: "Selecione pelo menos um minijogo para começar.",
+  minigamesButtonLabel: "Minijogos", 
+  maxLengthReached: "Limite de caracteres atingido.",
+  completeMinigameButton: "Concluir Minijogo",
+
+  selectGameModeTitle: "Selecionar Modo de Jogo",
+  crashGameMode: "Modo Crash",
+  rouletteGameMode: "Modo Roleta",
+  contextoGameMode: "Modo Contexto",
+  geoGuessrGameMode: "Modo GeoGuessr",
+  crashGameDescription: "Aposte na subida do multiplicador. Retire antes que estoure!",
+  rouletteGameDescription: "Aposte nas cores. Acerte a cor sorteada para multiplicar!",
+  contextoGameDescription: "Adivinhe a palavra secreta! Palavras são ranqueadas por similaridade.",
+  geoGuessrGameDescription: "Investigue pistas visuais e adivinhe o local no mundo!",
+  rouletteGameCoomingSoon: "Modo Roleta (Em Breve!)",
+
+  playerSetupTitle: "Configurar Jogadores",
+  gameCustomizationTitle: "Personalize Sua Partida",
+  nextButtonLabel: "Próximo",
+  backButtonLabel: "Voltar",
+  selectAllButtonLabel: "Selecionar Todos",
+  deselectAllButtonLabel: "Desselecionar Todos",
+  minigameSelectionHeader: "Quais minijogos incluir?",
+  confirmAndStartGame: "Confirmar e Iniciar Jogo",
+  customizeGameButton: "Personalizar Jogo",
+
+  roulettePhaseBettingTitle: "Roleta: Façam Suas Apostas!", 
+  rouletteIterationLabel: "Rodada", 
+  placeYourBets: "Façam Suas Apostas!",
+  betAmountLabel: "Valor da Aposta:",
+  selectBetColorLabel: "Escolha uma Cor:",
+  confirmBetButtonLabel: "Confirmar Aposta",
+  betConfirmedMessage: (amount: number, colorOrItem?: string) => colorOrItem ? `Apostou ${amount} em ${colorOrItem}` : `Aposta de ${amount} confirmada`, 
+  waitingForOpponent: (opponentName: string) => `Aguardando ${opponentName} apostar...`,
+  allBetsConfirmed: "Todos prontos! Iniciando...", 
+  spinRouletteButtonLabel: "Girar Roleta!",
+  spinningInProgress: "Girando a Roleta...",
+  rouletteRed: "Vermelho",
+  rouletteBlack: "Preto",
+  rouletteGreen: "Verde",
+  insufficientBalance: "Saldo insuficiente para esta aposta.",
+  bettingClosed: "Apostas encerradas.", 
+  rouletteResultPrefix: "A Roleta parou em:", 
+  rouletteResultColorOnlyStop: (colorName: string) => `A Roleta parou em ${colorName}!`, 
+  
+  rouletteModalSubtitle: (colorName: string) => `A Roleta parou em ${colorName}!`,
+  roulettePlayerOutcomeBetAndWin: (playerName: string, betAmount: number, colorName: string, totalPayout: number) => 
+    `${playerName}: Apostou ${betAmount} em ${colorName} e ganhou ${totalPayout} pontos!`,
+  roulettePlayerOutcomeBetAndLost: (playerName: string, betAmount: number, colorName: string) => 
+    `${playerName}: Apostou ${betAmount} em ${colorName} e perdeu.`,
+  roulettePlayerOutcomeNoBet: (playerName: string) => `${playerName}: Não apostou.`,
+  
+  playerWinsBet: (playerName: string, profit: number, color: string) => `${playerName} ganhou ${profit} pontos de lucro apostando em ${color}!`,
+  playerLosesBet: (playerName: string, amountLost: number, color: string) => `${playerName} perdeu ${amountLost} apostando em ${color}.`,
+
+  playerBreaksEven: (playerName: string) => `${playerName} não teve ganhos nem perdas nesta rodada.`,
+  noBetsPlaced: "Nenhuma aposta foi feita nesta rodada.",
+  bothPlayersLostBet: "Ambos os jogadores perderam suas apostas.",
+  calculatingResults: "Calculando resultados...",
+  getBetColorName: (color: BetColor): string => {
+    switch (color) {
+      case BetColor.RED: return PT_BR.rouletteRed;
+      case BetColor.BLACK: return PT_BR.rouletteBlack;
+      case BetColor.GREEN: return PT_BR.rouletteGreen;
+      default: return "";
+    }
+  },
+
+  crashBettingPhaseTitle: "Crash: Façam Suas Apostas!", 
+  iterationCrashLabel: "Rodada", 
+  confirmCrashBetButtonLabel: "Confirmar Aposta Crash", 
+  betsConfirmedStartCountdown: "Apostas confirmadas! Iniciando contagem...",
+  waitingForBets: "Aguardando apostas...",
+  crashRoundReadyMessage: (round: number) => `Rodada Crash ${round} Pronta!`, 
+  startCrashRoundButton: (round: number) => round === 1 ? "Iniciar Jogo Crash!" : `Iniciar Rodada Crash ${round}!`,
+  initiateCountdownButton: "Iniciar Contagem!",
+
+  contextoPhaseTitle: "Contexto: Descubra a Palavra!",
+  contextoInstructionsTitle: "Como Jogar Contexto:",
+  contextoInstruction1: "O objetivo é descobrir a palavra secreta.",
+  contextoInstruction2: "Você pode tentar quantas vezes precisar.",
+  contextoInstruction3: "Após cada palpite, veja a posição da palavra. A palavra secreta é a número 1.",
+  contextoInstruction4: (playerName: string) => `É a vez de ${playerName} tentar adivinhar!`,
+  contextoYourTurn: (playerName: string) => `Sua vez, ${playerName}!`,
+  contextoEnterWord: "Digite uma palavra...",
+  contextoSubmitGuess: "Enviar Palpite",
+  contextoHistoryTitle: "Histórico de Palpites:",
+  contextoRankLabel: "Rank",
+  contextoWordLabel: "Palavra",
+  contextoPlayerLabel: "Jogador",
+  contextoSecretWordFound: (playerName: string, secretWord: string) => `${playerName} encontrou a palavra secreta: ${secretWord}!`,
+  contextoGeneratingSecretWord: "Gerando nova palavra secreta...",
+  contextoCheckingSimilarity: "Verificando similaridade...",
+  contextoErrorGeneratingWord: "Erro ao gerar palavra secreta. Tente novamente.",
+  contextoErrorCheckingSimilarity: "Erro ao verificar similaridade. Tente novamente.",
+  contextoWordTooShort: "Palavra muito curta (mínimo 3 letras).",
+  contextoInvalidWord: "Palavra inválida (apenas letras).",
+  contextoAlreadyGuessed: (word: string) => `A palavra "${word}" já foi palpitada.`,
+  contextoWinRoundMessage: (playerName: string, secretWord: string) => `${playerName} venceu a partida de Contexto ao encontrar a palavra "${secretWord}"!`,
+  contextoGameLabel: "Partida Contexto",
+
+  // GeoGuessr Game Mode
+  geoGuessrPhaseTitle: "GeoGuessr: Onde no Mundo Estou?",
+  geoGuessrRoundLabel: (current: number, total: number) => `Localização ${current} de ${total}`,
+  geoGuessrCurrentPlayerTurn: (playerName: string) => `Vez de ${playerName} adivinhar!`,
+  geoGuessrEnterCountry: "Qual país é este?",
+  geoGuessrSubmitGuess: "Adivinhar País!",
+  geoGuessrGeneratingLocation: "Buscando um novo local no globo...",
+  geoGuessrErrorGeneratingLocation: "Erro ao carregar local. Tente novamente.",
+  geoGuessrRevealTitle: "Resultado da Rodada GeoGuessr",
+  geoGuessrPlayerGuess: (playerName: string, guess: string) => `${playerName} palpitou: ${guess}.`,
+  geoGuessrActualLocation: (country: string, continent: string, city?: string | null) => 
+    `O local era: ${city ? `${city}, ` : ''}${country} (${continent}).`,
+  geoGuessrPointsAwarded: (points: number) => `Você ganhou ${points} pontos!`,
+  geoGuessrNoPoints: "Nenhum ponto desta vez.",
+  geoGuessrGuessPlaceholder: "Digite o país...",
+  geoGuessrCorrectCountry: (points: number) => `País Correto! +${points} pontos!`,
+  geoGuessrCorrectContinent: (points: number) => `Continente Correto! +${points} pontos!`,
+  geoGuessrIncorrectGuess: "Palpite incorreto.",
+  geoGuessrYourGuess: "Seu palpite:",
+  geoGuessrLocationDetails: "Detalhes do Local:",
+  geoGuessrLocationCluesTitle: "Pista Visual e Dicas:",
+  geoGuessrAdditionalHintsTitle: "Dicas Adicionais:",
+  geoGuessrLoadingImage: "Gerando imagem do local...",
+
+  // Disconnection & Pause
+  gamePausedTitle: "Jogo Pausado",
+  playerDisconnected: (playerName: string) => `${playerName} se desconectou.`,
+  waitingForReconnection: "Aguardando reconexão... O Host pode optar por encerrar a partida a qualquer momento.",
+  endGameDueToDisconnect: "Encerrar Partida",
+  opponentDisconnected: "Seu oponente se desconectou. Aguardando...",
+  youHaveBeenDisconnected: "Você foi desconectado. Por favor, conecte-se novamente com o mesmo nome e código da sala.",
+  connectionLost: "Conexão Perdida",
+  tryAgain: "Tentar Novamente",
+  connecting: "Conectando...",
+  connectedAndWaiting: "Conectado! Aguardando o início do jogo na tela principal...",
+  hostIsCustomizing: "O Host está personalizando a partida...",
+
+  // Instruction Modal
+  instructionModalTitle: "Como Jogar",
+  instructionModalReadyButton: "Vamos Jogar!",
+  instructionModalConnectTitle: "1. Conecte com seu Celular",
+  instructionModalConnectBody: "Na tela principal, use o \"Código da Sala\" para conectar seu celular como controle. A tela do seu celular se transformará no seu joystick pessoal para o jogo!",
+  instructionModalObjectiveTitle: "2. Objetivo do Jogo",
+  crashObjective: "Aposte e retire seus ganhos antes que o multiplicador 'crashe'! Seja rápido para maximizar seus pontos, mas cuidado para não perder tudo.",
+  rouletteObjective: "Aposte em uma das três cores (Vermelho, Preto ou Verde). Se a roleta parar na sua cor, você multiplica sua aposta!",
+  contextoObjective: "Descubra a palavra secreta! A cada palpite, você verá quão próxima sua palavra está da secreta. A palavra secreta é o rank #1.",
+  geoGuessrObjective: "Investigue a imagem e as dicas para adivinhar em que país do mundo você está. Quem chegar mais perto, ganha mais pontos!",
+
+};
+
+export const getPronounInfo = (gender: Gender, forSelf: boolean = true): { subject: string, object: string, possessive: string } => {
+  switch (gender) {
+    case Gender.MASCULINO:
+      return { subject: forSelf ? 'você' : 'ele', object: forSelf ? 'você' : 'o', possessive: forSelf ? 'seu' : 'dele' };
+    case Gender.FEMININO:
+      return { subject: forSelf ? 'você' : 'ela', object: forSelf ? 'você' : 'a', possessive: forSelf ? 'sua' : 'dela' };
+    case Gender.OUTRO:
+    default:
+      return { subject: forSelf ? 'você' : 'elu', object: forSelf ? 'você' : 'elu', possessive: forSelf ? 'seu/sue' : 'delu' }; 
+  }
+};
